@@ -54,7 +54,7 @@ class RedisApplicationTests {
         List<Record> list;
 
         public RangeQueryList(List<Record> list) {
-            assertTrue(assertSorted(list, Comparator.comparing(x -> x.created)), "The collection is not sorted");
+            assertTrue(isSorted(list, Comparator.comparing(x -> x.created)), "The collection is not sorted");
             this.list = list;
         }
 
@@ -86,7 +86,7 @@ class RedisApplicationTests {
                         .build());
     }
 
-    static <T> boolean assertSorted(Collection<T> collection, Comparator<T> comp) {
+    static <T> boolean isSorted(Collection<T> collection, Comparator<T> comp) {
         if (collection.isEmpty()) return true;
         Iterator<T> it = collection.iterator();
         T last = it.next();
@@ -133,7 +133,7 @@ class RedisApplicationTests {
         assertEquals(2, sameTimestampRecords.size());
 
 
-        // Store a 1000 records with 1 minute of interval spacing and perform random quer
+        // Store a 1000 records with 1 minute of interval spacing and perform random queries
         List<Record> list = recordRange(ofMinutes(1), 3, 0).collect(Collectors.toCollection(ArrayList::new));
         RangeQueryList rql = new RangeQueryList(list);
         list.forEach(recordService::save);
