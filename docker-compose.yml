@@ -1,0 +1,32 @@
+version: "3.3"
+
+networks:
+  my-network:
+    driver: bridge
+
+volumes:
+  redis-vol:
+
+services:
+  api:
+    build: ./
+    environment:
+      - REDIS_HOST=redis-1
+    depends_on:
+      - redis-1
+    networks:
+      - my-network
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+    restart: on-failure
+
+  redis-1:
+    image: redis
+    expose:
+      - 6379
+    networks:
+      my-network:
+    volumes:
+    - redis-vol:/data

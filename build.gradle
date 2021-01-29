@@ -1,0 +1,45 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.project'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+bootRun {
+    environment 'spring.output.ansi.console-available', true
+}
+
+configurations {
+	all*.exclude module : 'spring-boot-starter-logging'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation ('org.springframework.boot:spring-boot-starter-web') {
+        exclude module: "logback-classic"
+    }
+    implementation 'redis.clients:jedis:3.3.0'
+    // version fetched from here https://github.com/spring-projects/spring-data-redis/blob/f094a372e06ed608c1af71e1c7b5efd7327fc58c/pom.xml
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'it.ozimov:embedded-redis:0.7.3'
+}
+
+test {
+    useJUnitPlatform()
+}
